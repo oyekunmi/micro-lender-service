@@ -1,0 +1,66 @@
+accounts
+ account_no
+ account_name
+ account_id
+ 
+products
+ product_name
+ product_key
+ 
+user_types
+ agent
+ flat
+ teller
+ admin
+ 
+user_accounts
+ user_id
+ account_id
+ 
+user
+ name
+ partner_type
+ bio
+ 
+ 
+transactions
+ account_id
+ amount
+ running_balance
+ available_balance
+ narration
+ product_id
+
+ 
+create-agency ( Signup )
+
+agent
+login
+profile
+logout
+manage-partners
+
+
+General
+login
+carry out transactions
+ - deposite
+   - contribution
+   - loan offset
+ - cash out
+ - liquidate
+ - request loan
+ 
+teller
+ - login
+ - add agent-general
+ - carry out transactions
+  - deposite
+   - contribution
+   - loan offset
+ - cash out
+ - liquidate
+ - request loan
+
+
+
