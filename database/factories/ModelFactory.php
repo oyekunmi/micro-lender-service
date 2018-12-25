@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,13 @@
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
+        'username' => $faker->userName,
         'email' => $faker->email,
+        'password' => Hash::make('12345'),
+        'profile' => json_encode([
+            'start_date' => 'Carbon::yesterday()->toDateString()',
+            'end_date' =>  'Carbon::now()->toDateString()',
+            'thing' => rand(11,99),
+        ])
     ];
 });
