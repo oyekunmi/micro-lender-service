@@ -14,3 +14,17 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+$router->post(
+    'auth/login', 
+    [
+       'uses' => 'AuthController@authenticate'
+    ]
+);
+
+$router->get('/example', ['middleware' => 'token.auth', function () {
+//    $user = Auth::user();
+//
+//    $user = $request->get('Authorization');
+
+    return "okay";
+}]);

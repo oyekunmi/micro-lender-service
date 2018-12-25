@@ -13,6 +13,10 @@ class ExampleController extends Controller
     {
         //
     }
+    
+    public function index(){
+        return "okay";
+    }
 
     //
 }
