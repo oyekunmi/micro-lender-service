@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
 use App\User;
 use Illuminate\Http\Request;
@@ -16,19 +16,9 @@ class AuthController extends Controller
      */
     private $request;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     */
-    public function __construct(Request $request) {
+    public function __invoke(Request $request){
         $this->request = $request;
-    }
 
-
-    public function authenticate(){
-        
         $this->validate($this->request, [
             'username'     => 'required',
             'password'  => 'required'
@@ -38,10 +28,6 @@ class AuthController extends Controller
         $dbuser = User::where('username', $this->request->input('username'))->first();
 
         if (!$dbuser) {
-            // You wil probably have some sort of helpers or whatever
-            // to make sure that you have the same response format for
-            // differents kind of responses. But let's return the 
-            // below respose for now.
             return response()->json([
                 'error' => 'User does not exist.'
             ], 400);
@@ -70,9 +56,6 @@ class AuthController extends Controller
             'exp' => time() + 60*60 // Expiration time
         ];
         
-        
-        // As you can see we are passing `JWT_SECRET` as the second parameter that will 
-        // be used to decode the token in the future.
         return JWT::encode($payload, env('JWT_SECRET'));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\core;
+namespace App\Http\Controllers\Core;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,10 +24,10 @@ class UserRegistrationController extends Controller
         $this->request = $request;
         
         $this->validate($request, [
-            'username'     => 'required',
-            'name'  => 'required',
+            'username' => 'bail|required|unique:users',
+            'name' => 'required',
             'email' => 'required|email',
-            'profile' => 'required'
+            'profile' => 'required',
         ]);
         
         DB::beginTransaction();
@@ -35,9 +35,10 @@ class UserRegistrationController extends Controller
         try{
             $user = User::create($this->userFactory());
             $user->roles()->attach( $this->getRole() );
-            $this->accountFactory($user, $this->getProduct())->save();
+            $this->accountFactory($user, $this->getProduct($user))->save();
         } catch (Exception $ex) {
             DB::rollback();
+            return $ex->message;
         } finally {
             
         }
@@ -54,7 +55,20 @@ class UserRegistrationController extends Controller
     }
     
     private function getProduct(){
-        $product = $this->request->product?? 'savings';
+        $product = $this->request->product;
+        
+        if(!$product){
+
+            $role = $this->getRole()->slug;
+            switch ($role){
+                case ("merchant"):
+                    $product = "internal";
+                    break;
+                default:
+                    $product = 'savings';
+            }
+        }
+        
         return Product::where('slug', $product)->first();
     }
     

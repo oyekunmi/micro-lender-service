@@ -15,12 +15,13 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('account_no');
+            $table->string('account_no')->unique();
             $table->string('account_name');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('product_id');
             $table->timestamps();
             
+            $table->unique(['user_id','product_id']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
