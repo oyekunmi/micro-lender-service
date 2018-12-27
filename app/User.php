@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Role;
+use App\Account;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +20,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'username'
+        'name', 'email', 'username','password'
     ];
 
     /**
@@ -29,4 +31,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+    
+    public function roles()
+    {
+      return $this->belongsToMany(Role::class, 'role_users');
+    }
+    
+    public function accounts(){
+        return $this->hasMany(Account::class);
+    }
 }

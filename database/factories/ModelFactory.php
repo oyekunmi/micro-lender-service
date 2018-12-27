@@ -25,3 +25,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         ])
     ];
 });
+$factory->define(App\Account::class, function (Faker\Generator $faker)  {
+    return [
+        'account_no' => $faker->bankAccountNumber,
+        'account_name' => $faker->name
+    ];
+});
