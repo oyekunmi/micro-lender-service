@@ -16,7 +16,7 @@ user_types
 user_accounts
  user_id
  account_id
- 
+
 user
  name
  partner_type

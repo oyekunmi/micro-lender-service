@@ -14,17 +14,20 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->post(
-    'auth/login', 
+$router->post('auth/login', 
     [
-       'uses' => 'AuthController@authenticate'
+       'uses' => 'Core\AuthController'
     ]
 );
 
 $router->get('/example', ['middleware' => 'token.auth', function () {
-//    $user = Auth::user();
-//
-//    $user = $request->get('Authorization');
-
     return "okay";
 }]);
+
+$router->group(['middleware' => ['token.auth']], function () use ($router) {
+ 
+    $router->post('user/create', [
+        'uses' => 'Core\UserRegistrationController'
+    ]);
+
+});
