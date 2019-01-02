@@ -14,11 +14,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->post('auth/login', 
-    [
-       'uses' => 'Core\AuthController'
-    ]
-);
+$router->post('auth/login', 'Auth\AuthController');
 
 $router->get('/example', ['middleware' => 'token.auth', function () {
     return "okay";
@@ -26,8 +22,7 @@ $router->get('/example', ['middleware' => 'token.auth', function () {
 
 $router->group(['middleware' => ['token.auth']], function () use ($router) {
  
-    $router->post('user/create', [
-        'uses' => 'Core\UserRegistrationController'
-    ]);
+    $router->post('customers/create', 'Teller\CustomerController@create');
+    $router->get('customers', 'Teller\CustomerController@index');
 
 });

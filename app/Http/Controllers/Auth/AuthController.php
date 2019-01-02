@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Core;
+namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\JWT;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {

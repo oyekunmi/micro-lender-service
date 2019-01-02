@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Core;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 use App\Http\Controllers\Controller;
 use App\Role;
 use App\User;
 use App\Product;
 use App\Account;
 
-class UserRegistrationController extends Controller
+class RegistrationController extends Controller
 {
     private $request ;
 
