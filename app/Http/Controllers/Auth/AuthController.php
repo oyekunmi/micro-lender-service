@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\JWT;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 
 class AuthController extends Controller
 {
@@ -17,7 +18,7 @@ class AuthController extends Controller
      */
     private $request;
 
-    public function __invoke(Request $request){
+    public function login(Request $request){
 
         $this->request = $request;
 
@@ -27,31 +28,51 @@ class AuthController extends Controller
         ]);
 
         // Find the user by username
-        $dbuser = User::where('username', $this->request->input('username'))->first();
+               
+        $dbuser;
+        try {
+            $dbuser = User::where('username', $this->request->input('username'))->first();
+            
+            if (!$dbuser) {
+                return response()->json([
+                    'errors' => ['Bad request' => 'User does not exist.']
+                ], 400);
+            }
+        
+        } catch (QueryException $ex) {
+            return response()->json([
+                'errors' => ['Bad request' => 'The request cannot be completed at the moment']
+            ], 400);
+        } catch (Exception $ex) {
+            return reponse()->json([
+                'errors' => ['Bad request' => 'Something bad happened']
+            ]);
+        }
         
 //        die($dbuser);
         
-        if (!$dbuser) {
-            return response()->json([
-                'error' => 'User does not exist.'
-            ], 400);
-        }
-
+        
         // Verify the password and generate the token
         if (Hash::check($this->request->input('password'), $dbuser->password)) {
+            $dbuser->token = $this->generateToken($dbuser);
             return response()->json([
-                'access_token' => $this->generateToken($dbuser)
+                'user' => $dbuser
             ], 200);
         }
     
         // Bad Request response
         return response()->json([
-            'error' => 'Username or password is wrong.'
+            'errors' => 'Username or password is wrong.'
         ], 400);
 
 
     }
-
+    
+    public function get(Request $request){
+        $this->request = $request;
+        $user = $this->request->auth;
+         return [ 'user' => $user ];
+    }
     private function generateToken(User $user){
         $payload = [
             'iss' => "microlender", // Issuer of the token
