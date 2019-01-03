@@ -59,9 +59,12 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
+ $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+    App\Http\Middleware\OptionsRequestMiddleware::class
+//    App\Http\Middleware\CorsMiddleware::class
+
+ ]);
 
 $app->routeMiddleware([
     'token.auth' => App\Http\Middleware\TokenMiddleware::class,

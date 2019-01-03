@@ -18,6 +18,7 @@ class AuthController extends Controller
     private $request;
 
     public function __invoke(Request $request){
+
         $this->request = $request;
 
         $this->validate($this->request, [
@@ -27,7 +28,9 @@ class AuthController extends Controller
 
         // Find the user by username
         $dbuser = User::where('username', $this->request->input('username'))->first();
-
+        
+//        die($dbuser);
+        
         if (!$dbuser) {
             return response()->json([
                 'error' => 'User does not exist.'
