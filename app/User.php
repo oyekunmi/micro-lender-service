@@ -32,6 +32,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
     
+    protected $appends = ['roles'];
+
+    
     public function attachToken($token){
         $this->token = $token;
         return $this;
@@ -43,6 +46,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
       return $this->belongsToMany(Role::class, 'role_users');
     }
     
+    public function getRolesAttribute(){
+        return $this->roles()->getResults()->map( function($item) {
+            return $item->slug;
+        });
+    }
+
+
     public function accounts(){
         return $this->hasMany(Account::class);
     }

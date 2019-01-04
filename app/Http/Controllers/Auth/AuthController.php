@@ -29,6 +29,7 @@ class AuthController extends Controller
 
         // Find the user by username
                
+/*      @var $dbuser User */
         $dbuser;
         try {
             $dbuser = User::where('username', $this->request->input('username'))->first();
@@ -48,9 +49,6 @@ class AuthController extends Controller
                 'errors' => ['Bad request' => 'Something bad happened']
             ]);
         }
-        
-//        die($dbuser);
-        
         
         // Verify the password and generate the token
         if (Hash::check($this->request->input('password'), $dbuser->password)) {
