@@ -32,6 +32,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
     
+    public function attachToken($token){
+        $this->token = $token;
+        return $this;
+    }
+
+
     public function roles()
     {
       return $this->belongsToMany(Role::class, 'role_users');

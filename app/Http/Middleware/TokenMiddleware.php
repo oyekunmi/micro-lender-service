@@ -48,9 +48,7 @@ class TokenMiddleware
             ], 400);
         }
         
-        $user = User::find($credentials->sub);
-        $user->token = $token;
-        $request->auth = $user;
+        $request->auth = User::find($credentials->sub)->attachToken($token);
         $response = $next($request);
 
         return $response;
