@@ -37,15 +37,20 @@ class TokenMiddleware
         } catch(ExpiredException $e) {
             return response()->json([
                 'error' => 'Provided token is expired.'
-            ], 400);
+            ], 401);
         } catch (SignatureInvalidException $ex){
               return response()->json([
                 'error' => 'Invalid token supplied.'
-            ], 400);
-        }catch(Exception $e) {
+            ], 401);
+        }catch(\DomainException $ex){
+            return response()->json([
+                'error' => 'Invalid token supplied.'
+            ], 401);
+        }
+        catch(Exception $e) {
             return response()->json([
                 'error' => 'An error while decoding token.'
-            ], 400);
+            ], 401);
         }
         
         $request->auth = User::find($credentials->sub)->attachToken($token);

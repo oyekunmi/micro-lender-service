@@ -25,4 +25,5 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
     $router->get('user', 'Auth\AuthController@get');
     $router->post('customers/create', 'Teller\CustomerController@create');
     $router->get('customers', 'Teller\CustomerController@index');
+    $router->get('products', 'Products\ProductsController@index');
 });

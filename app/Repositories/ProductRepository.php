@@ -14,4 +14,8 @@ class ProductRepository{
         return Product::where('slug', $slug)->first();
     }
     
+    function getAll(){
+        return Product::all();
+    }
+    
 }
