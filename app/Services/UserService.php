@@ -36,8 +36,8 @@ class UserService{
         return $this->repo->getAllInRole('teller');
     }
     
-   function getUser($username){
-       $this->repo->getUserByUsername($username);
+   function getCustomerByUsername($username){
+       return $this->repo->getByUsernameAndRole($username, "customer");
    }
    
    function validateUserData(array $userData){
