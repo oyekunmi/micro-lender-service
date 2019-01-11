@@ -38,7 +38,7 @@ class CustomerController extends Controller{
      * @param string $username
      * @return \App\User
      */
-    function show($username){
+    function show(string $username){
         $user = $this->userService->getCustomerByUsername($username);
         return $user ? $user : response()->json([
                     'errors' => [ 'Customer does not exist.']
@@ -63,6 +63,44 @@ class CustomerController extends Controller{
             return $result;
         }else{
             return $this->userService->createCustomerErrors();
+        }
+    }
+    
+    /**
+     * 
+     * @param string $username
+     */
+    function update(string $username){
+        
+        $customer = $this->userService->getCustomerByUsername($username);
+        if(!$customer) { 
+            response()->json([
+                    'errors' => [ 'Customer does not exist.']
+                ], 400);
+        }
+        
+        $result = $this->userService->updateCustomer($this->request->input(), $customer);
+        
+        if($result){ 
+            return $result;
+        }
+        else { 
+            return response()->json([
+                    'errors' => [ 'Failed to update customer.']
+                ], 400);
+        }
+    }
+    
+    
+    function delete(string $username){
+        try{
+            $this->userService->deleteCustomerByUsername($username);
+        } catch (Exception $ex) {
+            return response()->json([
+                    'errors' => [ 'Failed to delete customer.']
+                ], 400);
+        } finally {
+            return true;
         }
     }
 }

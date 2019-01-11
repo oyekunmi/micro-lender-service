@@ -16,7 +16,7 @@ class UserRepository{
         return User::find($id);
     }
     
-    function getByUsername($username){
+    function getByUsername($username): \App\User{
         return User::where('username',$username)->first();
     }
     
@@ -28,5 +28,9 @@ class UserRepository{
     
     function save($user){
         return User::create($user);
+    }
+    
+    function deleteByUsername($username){
+        return $this->getByUsername($username)->delete();
     }
 }

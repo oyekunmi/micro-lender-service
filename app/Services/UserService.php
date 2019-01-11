@@ -74,6 +74,9 @@ class UserService{
 
    }
    
+   function deleteCustomerByUsername($username){
+       return $this->repo->deleteByUsername($username);
+   }
     
     
 }
