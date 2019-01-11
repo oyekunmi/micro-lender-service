@@ -29,6 +29,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
     /** customers **/
     $router->get('customers/{username}', 'CustomerController@show');
+    $router->delete('customers/{username}', 'CustomerController@delete');
     $router->post('customers', 'CustomerController@store');
     $router->get('customers', 'CustomerController@index');
 

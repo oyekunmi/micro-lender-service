@@ -8,6 +8,7 @@ use App\Repositories\ProductRepository;
 use App\Repositories\AccountRepository;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class UserService{
    
@@ -51,31 +52,56 @@ class UserService{
        return $validator->fails() ? $validator->errors(): true;
    }
            
-   function createUser(array $userData){
+
+   
+   public function createCustomer($customerData){
+       $customerObject = $this->customerRequestFactory($customerData);
+       return $this->createUser($customerObject);
+   }
+   
+   public function deleteCustomerByUsername($username){
+       return $this->repo->deleteByUsername($username);
+   }
+   
+      private function createUser(array $userObject){
        
         DB::beginTransaction();
         
-        try{
-            $userObject = $this->userFactory($userData);
-            
+        try{            
             $user = $this->repo->save($userObject);
             $user->roles()->attach( $this->roleRepo->getBySlug($userObject['role']) );
             $this->accountRepo->createAccount($user, $this->productRepo->getBySlug($userObject['product']), '150844847');
             
         } catch (Exception $ex) {
             DB::rollback();
-            return $ex->message;
+            return false;
+        }catch (QueryException $ex) {
+            DB::rollback();
+            return false;
         } finally {
             
         }
         
         DB::commit();
-        return response('Ok');
+        
+        return $user;
 
    }
    
-   function deleteCustomerByUsername($username){
-       return $this->repo->deleteByUsername($username);
+   private function customerRequestFactory($request){
+        return [
+            'name' => $request->name,
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => app('hash')->make('67544989542'),
+            'role' => 'customer',
+            'product' => $request->product ?? 'savings',
+            'profile' => json_encode($this->buildCustomerProfile($request))
+        ];
+    
+   }
+   private function buildCustomerProfile($request) {
+      return json_encode('{}');
    }
     
     

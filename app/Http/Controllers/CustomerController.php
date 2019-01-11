@@ -57,12 +57,15 @@ class CustomerController extends Controller{
             return response($isValid, 400);
         }
         
-        $result = $this->userService->createCustomer($userData);
+        $result = $this->userService->createCustomer($this->request);
         
-        if($result){
+        if($result ){
             return $result;
         }else{
-            return $this->userService->createCustomerErrors();
+            return 
+            response()->json([
+                    'errors' => [ 'cannot create customer due to bad data.']
+                ], 400);
         }
     }
     
@@ -100,7 +103,7 @@ class CustomerController extends Controller{
                     'errors' => [ 'Failed to delete customer.']
                 ], 400);
         } finally {
-            return true;
+            return response()->json('Ok');
         }
     }
 }
