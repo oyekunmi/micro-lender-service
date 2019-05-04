@@ -63,28 +63,30 @@ class UserService{
        return $this->repo->deleteByUsername($username);
    }
    
-      private function createUser(array $userObject){
-       
-        DB::beginTransaction();
-        
-        try{            
-            $user = $this->repo->save($userObject);
-            $user->roles()->attach( $this->roleRepo->getBySlug($userObject['role']) );
-            $this->accountRepo->createAccount($user, $this->productRepo->getBySlug($userObject['product']), '150844847');
-            
-        } catch (Exception $ex) {
-            DB::rollback();
-            return false;
-        }catch (QueryException $ex) {
-            DB::rollback();
-            return false;
-        } finally {
-            
-        }
-        
-        DB::commit();
-        
-        return $user;
+    private function createUser(array $userObject){
+
+      DB::beginTransaction();
+
+      try{            
+          $user = $this->repo->save($userObject);
+          $user->roles()->attach( $this->roleRepo->getBySlug($userObject['role']) );
+          
+          //@TODO: Check if the account already exist
+          $this->accountRepo->createAccount($user, $this->productRepo->getBySlug($userObject['product']), '150844847');
+          
+      } catch (Exception $ex) {
+          DB::rollback();
+          return false;
+      }catch (QueryException $ex) {
+          DB::rollback();
+          return false;
+      } finally {
+
+      }
+
+      DB::commit();
+
+      return $user;
 
    }
    
@@ -101,7 +103,7 @@ class UserService{
     
    }
    private function buildCustomerProfile($request) {
-      return json_encode('{}');
+      return json_encode($request->profile ?? '{}');
    }
     
     
